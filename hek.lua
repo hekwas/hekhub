@@ -1,141 +1,225 @@
---// HEKWA HUB - Compact Dark Red UI
+--// HEKWA HUB FULL SYSTEM
+
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+
 local player = Players.LocalPlayer
 
---// ScreenGui
-local sg = Instance.new("ScreenGui")
-sg.Name = "HekwaHubUI"
+--// GUI
+local sg = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+sg.Name = "HekwaHub"
 sg.ResetOnSpawn = false
-sg.Parent = player:WaitForChild("PlayerGui")
 
---// Theme
+--// THEME
 local C = {
-	bg = Color3.fromRGB(8, 8, 10),
-	panel = Color3.fromRGB(12, 12, 15),
-	red = Color3.fromRGB(180, 40, 40),
-	redDark = Color3.fromRGB(120, 25, 25),
-	redGlow = Color3.fromRGB(220, 70, 70),
-	text = Color3.fromRGB(240, 240, 240),
-	textDim = Color3.fromRGB(170, 170, 170),
-	border = Color3.fromRGB(60, 15, 15)
+	bg = Color3.fromRGB(10,10,12),
+	panel = Color3.fromRGB(18,18,22),
+	red = Color3.fromRGB(170,40,40),
+	redDark = Color3.fromRGB(110,25,25),
+	redGlow = Color3.fromRGB(220,60,60),
+	text = Color3.fromRGB(235,235,235)
 }
 
---// Main Frame
-local main = Instance.new("Frame")
-main.Parent = sg
-main.Name = "Hekwa Hub"
-main.Size = UDim2.fromOffset(420, 520)
-main.Position = UDim2.fromScale(0.5, 0.5)
-main.AnchorPoint = Vector2.new(0.5, 0.5)
+--// MAIN
+local main = Instance.new("Frame", sg)
+main.Size = UDim2.fromOffset(420,520)
+main.Position = UDim2.fromScale(0.5,0.5)
+main.AnchorPoint = Vector2.new(0.5,0.5)
 main.BackgroundColor3 = C.bg
-main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
-main.ClipsDescendants = true
+main.BorderSizePixel = 0
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,16)
 
-Instance.new("UICorner", main).CornerRadius = UDim.new(0, 16)
-
---// Fog Overlay
-local fog = Instance.new("ImageLabel", main)
-fog.Size = UDim2.fromScale(1, 1)
-fog.BackgroundTransparency = 1
-fog.Image = "rbxassetid://8992230677"
-fog.ImageTransparency = 0.75
-fog.ImageColor3 = Color3.fromRGB(60, 20, 20)
-fog.ZIndex = 1
-
---// Stroke
 local stroke = Instance.new("UIStroke", main)
-stroke.Color = C.border
+stroke.Color = C.redDark
 stroke.Thickness = 1.2
-stroke.Transparency = 0.15
 
---// Top Bar
-local top = Instance.new("Frame", main)
-top.Size = UDim2.new(1, 0, 0, 56)
-top.BackgroundColor3 = C.panel
-top.BorderSizePixel = 0
-top.ZIndex = 2
-
-Instance.new("UICorner", top).CornerRadius = UDim.new(0, 16)
-
---// Title
-local title = Instance.new("TextLabel", top)
-title.Size = UDim2.new(1, -20, 1, 0)
-title.Position = UDim2.fromOffset(14, 0)
+--// TITLE
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1,0,0,50)
 title.BackgroundTransparency = 1
-title.Text = "HEKWAS HUB"
+title.Text = "HEKWA HUB"
 title.Font = Enum.Font.GothamBold
 title.TextSize = 22
-title.TextXAlignment = Left
 title.TextColor3 = C.redGlow
-title.ZIndex = 3
 
---// Content Area
+--// CONTENT
 local content = Instance.new("Frame", main)
-content.Position = UDim2.fromOffset(0, 64)
-content.Size = UDim2.new(1, 0, 1, -64)
+content.Position = UDim2.fromOffset(0,60)
+content.Size = UDim2.new(1,0,1,-60)
 content.BackgroundTransparency = 1
 
 local layout = Instance.new("UIListLayout", content)
-layout.Padding = UDim.new(0, 14)
-layout.HorizontalAlignment = Center
+layout.Padding = UDim.new(0,14)
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
---// Section Creator
-local function createSection(text)
-	local sec = Instance.new("Frame", content)
-	sec.Size = UDim2.fromOffset(380, 70)
-	sec.BackgroundColor3 = C.panel
-	sec.BorderSizePixel = 0
+--// VARIABLES
+local speedEnabled = false
+local speedValue = 16
+local jumpValue = 50
+local antiRagdoll = false
+local espEnabled = false
+local toggleKey = Enum.KeyCode.X
 
-	Instance.new("UICorner", sec).CornerRadius = UDim.new(0, 12)
-
-	local lbl = Instance.new("TextLabel", sec)
-	lbl.Size = UDim2.new(1, -20, 0, 30)
-	lbl.Position = UDim2.fromOffset(12, 6)
-	lbl.BackgroundTransparency = 1
-	lbl.Text = text
-	lbl.Font = Enum.Font.GothamSemibold
-	lbl.TextSize = 16
-	lbl.TextXAlignment = Left
-	lbl.TextColor3 = C.text
-
-	return sec
+--// CHARACTER REFRESH
+local function getHumanoid()
+	local char = player.Character or player.CharacterAdded:Wait()
+	return char:WaitForChild("Humanoid")
 end
 
---// Example Section
-local auto = createSection("Auto Features")
+--// GENERIC SLIDER
+local function createSlider(text, min, max, default, callback)
 
---// Button
-local btn = Instance.new("TextButton", auto)
-btn.Size = UDim2.fromOffset(160, 34)
-btn.Position = UDim2.fromOffset(12, 34)
-btn.Text = "ENABLE"
-btn.Font = Enum.Font.GothamBold
-btn.TextSize = 14
-btn.TextColor3 = C.text
-btn.BackgroundColor3 = C.redDark
-btn.BorderSizePixel = 0
+	local frame = Instance.new("Frame", content)
+	frame.Size = UDim2.fromOffset(380,70)
+	frame.BackgroundColor3 = C.panel
+	frame.BorderSizePixel = 0
+	Instance.new("UICorner", frame).CornerRadius = UDim.new(0,10)
 
-Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+	local label = Instance.new("TextLabel", frame)
+	label.Size = UDim2.new(1,-20,0,25)
+	label.Position = UDim2.fromOffset(10,5)
+	label.BackgroundTransparency = 1
+	label.Text = text.." : "..default
+	label.TextColor3 = C.text
+	label.Font = Enum.Font.GothamSemibold
+	label.TextSize = 14
+	label.TextXAlignment = Left
 
---// Button Glow
-local glow = Instance.new("UIStroke", btn)
-glow.Color = C.redGlow
-glow.Thickness = 1
-glow.Transparency = 0.35
+	local bar = Instance.new("Frame", frame)
+	bar.Size = UDim2.new(1,-20,0,10)
+	bar.Position = UDim2.fromOffset(10,40)
+	bar.BackgroundColor3 = C.redDark
+	bar.BorderSizePixel = 0
+	Instance.new("UICorner", bar).CornerRadius = UDim.new(1,0)
 
---// Button Effect
-btn.MouseEnter:Connect(function()
-	btn.BackgroundColor3 = C.red
+	local fill = Instance.new("Frame", bar)
+	fill.Size = UDim2.new((default-min)/(max-min),0,1,0)
+	fill.BackgroundColor3 = C.red
+	fill.BorderSizePixel = 0
+	Instance.new("UICorner", fill).CornerRadius = UDim.new(1,0)
+
+	local dragging = false
+
+	bar.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+		end
+	end)
+
+	UserInputService.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = false
+		end
+	end)
+
+	UserInputService.InputChanged:Connect(function(input)
+		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+			local percent = math.clamp((input.Position.X - bar.AbsolutePosition.X)/bar.AbsoluteSize.X,0,1)
+			fill.Size = UDim2.new(percent,0,1,0)
+			local val = math.floor(min + (max-min)*percent)
+			label.Text = text.." : "..val
+			callback(val)
+		end
+	end)
+end
+
+--// SPEED SLIDER
+createSlider("Speed",16,200,16,function(val)
+	speedValue = val
 end)
 
-btn.MouseLeave:Connect(function()
-	btn.BackgroundColor3 = C.redDark
+--// JUMP SLIDER
+createSlider("Jump Power",50,200,50,function(val)
+	jumpValue = val
+	getHumanoid().JumpPower = val
 end)
 
---// Subtle Animation
+--// SPEED TOGGLE VIA KEY
+UserInputService.InputBegan:Connect(function(input,gp)
+	if gp then return end
+	if input.KeyCode == toggleKey then
+		speedEnabled = not speedEnabled
+	end
+end)
+
 RunService.RenderStepped:Connect(function()
-	glow.Transparency = 0.25 + math.abs(math.sin(tick() * 2)) * 0.35
+	local hum = getHumanoid()
+
+	if speedEnabled then
+		hum.WalkSpeed = speedValue
+	else
+		hum.WalkSpeed = 16
+	end
+
+	if antiRagdoll then
+		hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,false)
+		hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown,false)
+	end
+end)
+
+--// TOGGLE BUTTON CREATOR
+local function createToggle(text, callback)
+
+	local btn = Instance.new("TextButton", content)
+	btn.Size = UDim2.fromOffset(380,50)
+	btn.BackgroundColor3 = C.panel
+	btn.Text = text.." : OFF"
+	btn.TextColor3 = C.text
+	btn.Font = Enum.Font.GothamBold
+	btn.TextSize = 14
+	btn.BorderSizePixel = 0
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0,10)
+
+	local state = false
+
+	btn.MouseButton1Click:Connect(function()
+		state = not state
+		btn.Text = text.." : "..(state and "ON" or "OFF")
+		btn.BackgroundColor3 = state and C.redDark or C.panel
+		callback(state)
+	end)
+end
+
+--// ANTI RAGDOLL
+createToggle("Anti Ragdoll",function(val)
+	antiRagdoll = val
+end)
+
+--// ESP SYSTEM
+local espFolder = Instance.new("Folder", sg)
+espFolder.Name = "ESP"
+
+local function createESP(plr)
+	if plr == player then return end
+
+	local function add(char)
+		local highlight = Instance.new("Highlight", espFolder)
+		highlight.Adornee = char
+		highlight.FillColor = C.red
+		highlight.OutlineColor = Color3.new(0,0,0)
+		highlight.FillTransparency = 0.5
+	end
+
+	if plr.Character then add(plr.Character) end
+	plr.CharacterAdded:Connect(add)
+end
+
+createToggle("ESP Players",function(val)
+	espEnabled = val
+	espFolder:ClearAllChildren()
+
+	if val then
+		for _,plr in pairs(Players:GetPlayers()) do
+			createESP(plr)
+		end
+	end
+end)
+
+Players.PlayerAdded:Connect(function(plr)
+	if espEnabled then
+		createESP(plr)
+	end
 end)
