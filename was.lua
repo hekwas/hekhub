@@ -833,7 +833,7 @@ local progressConnection = nil
 local StealData = {}
 
 -- Discord text for progress bar
-local DISCORD_TEXT = "discord.gg/22s"
+local DISCORD_TEXT = "HEKWAS"
 
 local function getDiscordProgress(percent)
     local totalChars = #DISCORD_TEXT
