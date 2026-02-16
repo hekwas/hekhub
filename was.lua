@@ -2519,7 +2519,7 @@ button.MouseButton1Click:Connect(function()
 
     button.Text = "ACCESS GRANTED"
     task.wait(0.8)        
-gui:Destroy()
+
 
   -- ===== BRUTAL INTRO FIXED =====
 local intro = Instance.new("Frame")
@@ -2582,5 +2582,6 @@ for i = 1, 20 do
 end
 
 intro:Destroy()
+gui:Destroy()
 StartTool()
 end)
