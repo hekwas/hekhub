@@ -2081,7 +2081,7 @@ _G.setSpeedVisual = VisualSetters.SpeedBoost
 
 createSlider(leftSide, 52, "Boost Speed", 1, 70, "BoostSpeed", function(v) Values.BoostSpeed = v end)
 
-createToggle(leftSide, 112, "Anti Ragdoll", "AntiRagdoll", function(s)
+createToggle(leftSide, 112, "Anti ", "AntiRagdoll", function(s)
     Enabled.AntiRagdoll = s
     if s then startAntiRagdoll() else stopAntiRagdoll() end
 end)
@@ -2108,19 +2108,19 @@ createToggleWithKey(leftSide, 432, "Bat Aimbot", "BATAIMBOT", "BatAimbot", funct
     if s then startBatAimbot() else stopBatAimbot() end
 end, C.danger)
 
-createToggle(leftSide, 484, "Galaxy Sky Bright", "GalaxySkyBright", function(s)
+createToggle(leftSide, 484, "Blood Sky Bright", "BloodSkyBright", function(s)
     Enabled.GalaxySkyBright = s
     if s then enableGalaxySkyBright() else disableGalaxySkyBright() end
 end, Color3.fromRGB(180, 80, 255))
 
 -- Right side toggles - SPACED OUT LIKE BEFORE
-createToggleWithKey(rightSide, 0, "Galaxy Mode", "GALAXY", "Galaxy", function(s)
+createToggleWithKey(rightSide, 0, "Blood Mode", "Blood", "Blood", function(s)
     Enabled.Galaxy = s
     if s then startGalaxy() else stopGalaxy() end
 end, Color3.fromRGB(60, 130, 255))
 _G.setGalaxyVisual = VisualSetters.Galaxy
 
-createSlider(rightSide, 52, "Gravity %", 25, 130, "GalaxyGravityPercent", function(v)
+createSlider(rightSide, 52, "Hop %", 25, 130, "GravityPercent", function(v)
     Values.GalaxyGravityPercent = v
     if galaxyEnabled then adjustGalaxyJump() end
 end)
@@ -2139,7 +2139,7 @@ createToggle(rightSide, 284, "Unwalk", "Unwalk", function(s)
     if s then startUnwalk() else stopUnwalk() end
 end)
 
-createToggle(rightSide, 336, "Optimizer + XRay", "Optimizer", function(s)
+createToggle(rightSide, 336, "XRay", "Optimizer", function(s)
     Enabled.Optimizer = s
     if s then enableOptimizer() else disableOptimizer() end
 end)
@@ -2189,7 +2189,7 @@ local infoLabel = Instance.new("TextLabel", leftSide)
 infoLabel.Size = UDim2.new(1, 0, 0, 40 * guiScale)
 infoLabel.Position = UDim2.new(0, 0, 0, 600 * guiScale)
 infoLabel.BackgroundTransparency = 1
-infoLabel.Text = "V=Speed | N=Spin | M=Galaxy | X=Aimbot\nZ=AutoLeft | C=AutoRight | Q=Nuke | U=GUI"
+infoLabel.Text = "67"
 infoLabel.TextColor3 = C.textDim
 infoLabel.Font = Enum.Font.Gotham
 infoLabel.TextSize = 9 * guiScale
