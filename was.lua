@@ -2376,78 +2376,68 @@ gui.Name = "HEKWASDUELS_UI"
 gui.IgnoreGuiInset = true
 
 -- Fog Background
-local fog = Instance.new("Frame", gui)
+local fog = Instance.new("Frame")
+fog.Parent = gui
 fog.Size = UDim2.new(1,0,1,0)
 fog.BackgroundColor3 = Color3.fromRGB(5,0,0)
-fog.BackgroundTransparency = 0.35
+fog.BackgroundTransparency = 0.4
 fog.ZIndex = 0
 
--- Animated Fog Pulse
-task.spawn(function()
-    while fog.Parent do
-        TweenService:Create(fog, TweenInfo.new(3), {BackgroundTransparency = 0.45}):Play()
-        task.wait(3)
-        TweenService:Create(fog, TweenInfo.new(3), {BackgroundTransparency = 0.3}):Play()
-        task.wait(3)
-    end
-end)
-
 -- Main Frame
-local frame = Instance.new("Frame", gui)
+local frame = Instance.new("Frame")
+frame.Parent = gui
 frame.Size = UDim2.new(0, 400, 0, 260)
 frame.Position = UDim2.new(0.5, -200, 0.5, -130)
 frame.BackgroundColor3 = Color3.fromRGB(15,0,0)
 frame.BorderSizePixel = 0
-frame.ZIndex = 2
+frame.ZIndex = 5
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0,20)
 
-local stroke = Instance.new("UIStroke", frame)
+local stroke = Instance.new("UIStroke")
+stroke.Parent = frame
 stroke.Color = Color3.fromRGB(120,0,0)
 stroke.Thickness = 4
 
--- Pulsing Glow
+-- Pulsing glow
 task.spawn(function()
     while frame.Parent do
-        TweenService:Create(stroke, TweenInfo.new(1.5), {Color = Color3.fromRGB(255,0,0)}):Play()
-        task.wait(1.5)
-        TweenService:Create(stroke, TweenInfo.new(1.5), {Color = Color3.fromRGB(120,0,0)}):Play()
-        task.wait(1.5)
+        stroke.Color = Color3.fromRGB(255,0,0)
+        task.wait(1)
+        stroke.Color = Color3.fromRGB(120,0,0)
+        task.wait(1)
     end
 end)
 
 -- Title
-local title = Instance.new("TextLabel", frame)
+local title = Instance.new("TextLabel")
+title.Parent = frame
 title.Size = UDim2.new(1,0,0,60)
 title.BackgroundTransparency = 1
 title.Text = "HEKWAS DUELS"
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 28
 title.TextColor3 = Color3.fromRGB(180,0,0)
-title.ZIndex = 3
+title.ZIndex = 6
 
-local titleStroke = Instance.new("UIStroke", title)
+local titleStroke = Instance.new("UIStroke")
+titleStroke.Parent = title
 titleStroke.Color = Color3.fromRGB(255,0,0)
 titleStroke.Thickness = 2
 
--- Blood Drip Effect
+-- Blood drips (SUB title)
 for i = 1, 6 do
-    local drip = Instance.new("Frame", frame)
-    drip.Size = UDim2.new(0, 6, 0, math.random(20,60))
+    local drip = Instance.new("Frame")
+    drip.Parent = frame
+    drip.Size = UDim2.new(0, 6, 0, math.random(20,40))
     drip.Position = UDim2.new(math.random(), 0, 0, 55)
     drip.BackgroundColor3 = Color3.fromRGB(120,0,0)
     drip.BorderSizePixel = 0
-    drip.ZIndex = 2
-
-    task.spawn(function()
-        while drip.Parent do
-            drip.Size = drip.Size + UDim2.new(0,0,0,1)
-            task.wait(0.05)
-        end
-    end)
+    drip.ZIndex = 4
 end
 
--- Key Box
-local box = Instance.new("TextBox", frame)
+-- TextBox
+local box = Instance.new("TextBox")
+box.Parent = frame
 box.Size = UDim2.new(0.85,0,0,55)
 box.Position = UDim2.new(0.075,0,0.4,0)
 box.BackgroundColor3 = Color3.fromRGB(25,0,0)
@@ -2456,10 +2446,12 @@ box.PlaceholderText = "ENTER YOUR KEY..."
 box.Font = Enum.Font.Gotham
 box.TextSize = 16
 box.ClearTextOnFocus = false
+box.ZIndex = 7
 Instance.new("UICorner", box).CornerRadius = UDim.new(0,14)
 
--- Verify Button
-local button = Instance.new("TextButton", frame)
+-- Button
+local button = Instance.new("TextButton")
+button.Parent = frame
 button.Size = UDim2.new(0.6,0,0,55)
 button.Position = UDim2.new(0.2,0,0.7,0)
 button.BackgroundColor3 = Color3.fromRGB(120,0,0)
@@ -2468,8 +2460,13 @@ button.TextColor3 = Color3.new(1,1,1)
 button.Font = Enum.Font.GothamBlack
 button.TextSize = 18
 button.BorderSizePixel = 0
+button.ZIndex = 7
 Instance.new("UICorner", button).CornerRadius = UDim.new(0,16)
 
+local buttonStroke = Instance.new("UIStroke")
+buttonStroke.Parent = button
+buttonStroke.Color = Color3.fromRGB(255,0,0)
+buttonStroke.Thickness = 2
 -- ===== VERIFY LOGIC =====
 button.MouseButton1Click:Connect(function()
 
@@ -2522,52 +2519,68 @@ button.MouseButton1Click:Connect(function()
     button.Text = "ACCESS GRANTED"
     task.wait(0.8)
 
-    -- ===== BRUTAL CINEMATIC INTRO =====
-    local intro = Instance.new("Frame", gui)
-    intro.Size = UDim2.new(1,0,1,0)
-    intro.BackgroundColor3 = Color3.fromRGB(0,0,0)
-    intro.ZIndex = 10
+  -- ===== BRUTAL INTRO FIXED =====
+local intro = Instance.new("Frame")
+intro.Parent = gui
+intro.Size = UDim2.new(1,0,1,0)
+intro.BackgroundColor3 = Color3.fromRGB(0,0,0)
+intro.BackgroundTransparency = 1
+intro.ZIndex = 20
 
-    local introTitle = Instance.new("TextLabel", intro)
-    introTitle.Size = UDim2.new(1,0,1,0)
-    introTitle.BackgroundTransparency = 1
-    introTitle.Text = "HEKWAS DUELS"
-    introTitle.Font = Enum.Font.GothamBlack
-    introTitle.TextSize = 70
-    introTitle.TextColor3 = Color3.fromRGB(120,0,0)
+local introTitle = Instance.new("TextLabel")
+introTitle.Parent = intro
+introTitle.Size = UDim2.new(1,0,1,0)
+introTitle.BackgroundTransparency = 1
+introTitle.Text = "HEKWAS DUELS"
+introTitle.Font = Enum.Font.GothamBlack
+introTitle.TextSize = 70
+introTitle.TextColor3 = Color3.fromRGB(120,0,0)
+introTitle.TextTransparency = 1
 
-    local glow = Instance.new("UIStroke", introTitle)
-    glow.Color = Color3.fromRGB(255,0,0)
-    glow.Thickness = 5
+local glow = Instance.new("UIStroke")
+glow.Parent = introTitle
+glow.Color = Color3.fromRGB(255,0,0)
+glow.Thickness = 0
 
-    -- Pulsing glow
+-- Fade In
+for i = 1, 20 do
+    intro.BackgroundTransparency -= 0.05
+    introTitle.TextTransparency -= 0.05
+    glow.Thickness += 0.3
+    task.wait(0.03)
+end
+
+-- Particles
+for i = 1, 60 do
+    local p = Instance.new("Frame")
+    p.Parent = intro
+    p.Size = UDim2.new(0,4,0,4)
+    p.Position = UDim2.new(math.random(),0,math.random(),0)
+    p.BackgroundColor3 = Color3.fromRGB(150,0,0)
+    p.BorderSizePixel = 0
+    p.BackgroundTransparency = 0.2
+    p.ZIndex = 21
+
     task.spawn(function()
-        while intro.Parent do
-            TweenService:Create(glow, TweenInfo.new(0.8), {Thickness = 8}):Play()
-            task.wait(0.8)
-            TweenService:Create(glow, TweenInfo.new(0.8), {Thickness = 4}):Play()
-            task.wait(0.8)
+        for t = 1, 100 do
+            p.Position += UDim2.new(0,0,0.005,0)
+            task.wait(0.02)
         end
+        p:Destroy()
     end)
+end
 
-    -- Red particles rain
-    for i = 1, 80 do
-        local p = Instance.new("Frame", intro)
-        p.Size = UDim2.new(0,3,0,3)
-        p.Position = UDim2.new(math.random(),0,math.random(-1,0),0)
-        p.BackgroundColor3 = Color3.fromRGB(150,0,0)
-        p.BorderSizePixel = 0
+task.wait(2)
 
-        task.spawn(function()
-            while intro.Parent do
-                p.Position = p.Position + UDim2.new(0,0,0.01,0)
-                task.wait(0.02)
-            end
-        end)
-    end
+-- Fade Out
+for i = 1, 20 do
+    intro.BackgroundTransparency += 0.05
+    introTitle.TextTransparency += 0.05
+    task.wait(0.03)
+end
 
-    task.wait(3)
+intro:Destroy()
 
-    gui:Destroy()
-    StartTool()
+gui:Destroy()
+StartTool()
 end)
